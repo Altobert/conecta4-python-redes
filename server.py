@@ -43,7 +43,7 @@ class Server:
                 self.player_b.sendall(b'B')
                 break
 
-        print('Ambos jugadores conectados')
+        print('both players connected')
         self.player_a.sendall(b'start')
         self.player_b.sendall(b'start')
 

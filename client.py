@@ -11,9 +11,9 @@ class Client:
 
         try:
             self.sock.connect(('', 1213))
-            print("conectado")
+            print("connected")
         except socket.error:
-            print("no pudo conectar")
+            print("couldn't connect")
             exit(0)
 
         self.sock.sendall(b'ready')
@@ -50,14 +50,14 @@ class Client:
     def print_winner(self):
         print("\n")
         win = """
-        ⭐⭐⭐⭐⭐⭐⭐
-        ⭐  UD. GANO  ⭐
-        ⭐⭐⭐⭐⭐⭐⭐
-                """
+⭐⭐⭐⭐⭐⭐⭐
+⭐  YOU WON  ⭐
+⭐⭐⭐⭐⭐⭐⭐
+        """
         lose = """
-        ❌❌❌❌❌❌❌
-        ❌   UD. PERDIO  ❌
-        ❌❌❌❌❌❌❌
+  ❌❌❌❌❌❌❌
+❌   YOU LOST   ❌
+  ❌❌❌❌❌❌❌
         """
 
         if(self.winner == self.player_id):
@@ -65,7 +65,6 @@ class Client:
         else:
             print(lose)
 
-    #funcion para imprimir tablero
     def print_board(self):
         output = ""
         for row in self.current_board[::-1]:
@@ -88,12 +87,12 @@ class Client:
         valid_input = False
 
         while(not valid_input):
-            message = input("Ingrese la columna de su preferencia: ")
+            message = input("input what column you want: ")
             col = message[0]
             if(col.isdigit() and int(col) > 0 and int(col) <= len(self.current_board[0])):
                 valid_input = True
             else:
-                print("\nInput invalido, intente otra vez")
+                print("\nnot valid input, try again")
 
         col = str(int(col) - 1)
         return col
