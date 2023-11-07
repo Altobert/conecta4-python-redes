@@ -2,38 +2,56 @@ import socket
 import json
 import sys
 
+#Se utiliza caracteristica orientada al objeto de lenguaje python
 class Server:
 
+    #Se inicia la clase servidor
     def __init__(self):
+
+        #se inicia juego con 6 filas y 7 columnas
         self.ROW_NUM = 6
         self.COL_NUM = 7
         self.winner = '-'
 
         PORT = 1213
 
+        #se inicializa un arreglo que representara el tablero
+        #se inicia cada espacio del arreglo vacio con simbolo "-"
         self.board = []
         for _ in range(7):
             self.board.append(['-']*7)
 
+        # no funciono juego de forma automatica
+        # se inicializa en nulo ambos jugadores
         self.player_a = None
         self.player_b = None
+
+        # se inicializan los socket
         self.socket = socket.socket()
         self.socket.bind(('', PORT))
+        
+        #se invoca funcion para conectar jugadores
         self.connect_players()
         
+        #aun no se ha tomado el turno por ningun jugador
         self.current_turn = False
 
+        #se simula un loop hasta que algun jugador gane.
         self.game_loop()
+
 
     def connect_players(self):
         self.socket.listen(5)
 
+        #ciclo while infinito
+        #entrada del primer jugador por la consola
         while True:
             self.player_a, _ = self.socket.accept()
             message = self.player_a.recv(38)
+            #se concatena string al momento de inicializar terminal
             if(message == b'ready'):
                 self.player_a.sendall(b'A')
-                print('player A connected')
+                print('jugador A conectado')
                 break
         
         while True:
@@ -41,17 +59,22 @@ class Server:
             message = self.player_b.recv(38)
             if(message == b'ready'):
                 self.player_b.sendall(b'B')
+                print('jugador B conectado')
                 break
 
-        print('both players connected')
+        print('Ambos jugadores sincronizados')
+        #se da inicio al juego con ambos jugadores enviando mensajes.
         self.player_a.sendall(b'start')
         self.player_b.sendall(b'start')
+
 
     def game_loop(self):
         current_player = None
 
+        #mientras el ganador sea vacio
         while(self.winner == '-'):
 
+            #asignar el turno hacia jugador A o jugador B
             if(self.current_turn):
                 current_player = self.player_a
             else:
@@ -113,8 +136,10 @@ class Server:
         return False
 
     def sync_to_clients(self):
-        print("starting sync")
+        print("traza del tablero")
 
+        #demostracion como va quedando el tablero luego
+        #de una jugada.
         package = {}
         package['board'] = self.board
         package['active'] = 'A' if self.current_turn else 'B'
@@ -122,8 +147,8 @@ class Server:
 
         message = bytes(json.dumps(package), 'utf-8')
 
-        print(sys.getsizeof(message))
-
+        #traza de la jugada se muestra en server
+        print(message)
         self.player_a.sendall(message)
         self.player_b.sendall(message)
 

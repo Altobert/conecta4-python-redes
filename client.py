@@ -11,11 +11,12 @@ class Client:
 
         try:
             self.sock.connect(('', 1213))
-            print("connected")
+            print("conectado")
         except socket.error:
-            print("couldn't connect")
+            print("no fue posible conectar")
             exit(0)
 
+        #se concatena string y jugador que realiza jygada
         self.sock.sendall(b'ready')
         self.player_id = self.sock.recv(34).decode('utf-8')
         print(self.player_id)
@@ -50,15 +51,16 @@ class Client:
     def print_winner(self):
         print("\n")
         win = """
-⭐⭐⭐⭐⭐⭐⭐
-⭐  UD. GANÓ  ⭐
-⭐⭐⭐⭐⭐⭐⭐
-        """
+        ⭐⭐⭐⭐⭐⭐⭐
+        ⭐  UD. GANÓ ⭐
+        ⭐⭐⭐⭐⭐⭐⭐
+                """
+        
         lose = """
-  ❌❌❌❌❌❌❌
-❌   UD. PERDIO   ❌
-  ❌❌❌❌❌❌❌
-        """
+        ❌❌❌❌❌❌❌
+        ❌UD. PERDIO❌
+        ❌❌❌❌❌❌❌
+                """
 
         if(self.winner == self.player_id):
             print(win)
