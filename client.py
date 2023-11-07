@@ -51,12 +51,12 @@ class Client:
         print("\n")
         win = """
 ⭐⭐⭐⭐⭐⭐⭐
-⭐  YOU WON  ⭐
+⭐  UD. GANÓ  ⭐
 ⭐⭐⭐⭐⭐⭐⭐
         """
         lose = """
   ❌❌❌❌❌❌❌
-❌   YOU LOST   ❌
+❌   UD. PERDIO   ❌
   ❌❌❌❌❌❌❌
         """
 
