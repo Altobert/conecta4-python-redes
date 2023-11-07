@@ -23,23 +23,28 @@ class Client:
 
         self.sock.recv(38)
         
-        self.client_loop()
+        self.loop_de_cliente()
 
-    def client_loop(self):
+    def loop_de_cliente(self):
+
+        #ciclo eterno para,
+        # sincronizar con servidor
+        # imprimir tablero, 
+        # evaluar si se muestra ganador 
         while True:
-            self.sync_with_server()
-            self.print_board()
+            self.sincronizar_con_servidor()
+            self.imprimir_tablero()
 
             if(self.winner != '-'):
-                self.print_winner()
+                self.mostrar_ganador()
                 break
 
             if(self.current_player == self.player_id):
                 move = self.get_player_move()
-                self.send_move(move)
+                self.enviar_jugada(move)
 
-
-    def sync_with_server(self):
+    #metodo para enviar datos a servidor
+    def sincronizar_con_servidor(self):
         state = self.sock.recv(333)
         print(state)
         state = json.loads(state.decode('utf-8'))
@@ -47,8 +52,8 @@ class Client:
         self.current_player = state['active']
         self.winner = state['winner']
 
-
-    def print_winner(self):
+    #metodo para mostrar ganador
+    def mostrar_ganador(self):
         print("\n")
         
         win = "UD. HA GANADO"
@@ -60,14 +65,18 @@ class Client:
         else:
             print(lose)
 
-    def print_board(self):
+    #metodo para mostrar tablero
+    def imprimir_tablero(self):
         output = ""
         for row in self.current_board[::-1]:
             for e in row:
+                #si es vacio
                 if e == '-':
                     output += '⚪️'
+                #si juega A
                 if e == 'A':
                     output += '🔴'
+                #si juega B
                 if e == 'B':
                     output += '🔵'
             output += '\n'
@@ -82,7 +91,7 @@ class Client:
         valid_input = False
 
         while(not valid_input):
-            message = input("input what column you want: ")
+            message = input("ingrese el numero de columna deseado: ")
             col = message[0]
             if(col.isdigit() and int(col) > 0 and int(col) <= len(self.current_board[0])):
                 valid_input = True
@@ -92,7 +101,7 @@ class Client:
         col = str(int(col) - 1)
         return col
 
-    def send_move(self, move):
+    def enviar_jugada(self, move):
         message = self.player_id
         message += move
         message = bytes(message, 'utf-8')
