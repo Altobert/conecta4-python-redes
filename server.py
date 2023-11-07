@@ -44,7 +44,7 @@ class Server:
         self.socket.listen(5)
 
         #ciclo while infinito
-        #entrada del primer jugador por la consola
+        ##espera hasta que ingrese un jugador 
         while True:
             self.player_a, _ = self.socket.accept()
             message = self.player_a.recv(38)
@@ -54,9 +54,11 @@ class Server:
                 print('jugador A conectado')
                 break
         
+        ##espera hasta que ingrese un jugador
         while True:
             self.player_b, _ = self.socket.accept()
             message = self.player_b.recv(38)
+            #entrada del segundo jugador
             if(message == b'ready'):
                 self.player_b.sendall(b'B')
                 print('jugador B conectado')
@@ -74,35 +76,35 @@ class Server:
         #mientras el ganador sea vacio
         while(self.winner == '-'):
 
-            #asignar el turno hacia jugador A o jugador B
+            #asignar el turno hacia jugador A si no jugador B
             if(self.current_turn):
                 current_player = self.player_a
             else:
                 current_player = self.player_b
 
-            self.sync_to_clients()
+            self.sincronizar_cliente()
 
             message = (current_player.recv(35).decode('utf-8'))
             player = message[0]
             place = int(message[1])
 
-            self.make_move(place, player)
-            self.check_board()                
+            self.hacer_jugada(place, player)
+            self.revisar_tablero()                
 
             self.current_turn = not self.current_turn
 
-        self.sync_to_clients()
+        self.sincronizar_cliente()
         self.player_a.close()
         self.player_b.close()
 
-    def make_move(self, place, player):
+    def hacer_jugada(self, place, player):
 
         for c in range(7):
             if(self.board[c][place] == '-'):
                 self.board[c][place] = player
                 break
 
-    def check_board(self):
+    def revisar_tablero(self):
         for i in range(self.ROW_NUM):
             for j in range(self.COL_NUM):
                 self.check_spot(i, j)
@@ -135,7 +137,7 @@ class Server:
 
         return False
 
-    def sync_to_clients(self):
+    def sincronizar_cliente(self):
         print("traza del tablero")
 
         #demostracion como va quedando el tablero luego

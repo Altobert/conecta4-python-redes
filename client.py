@@ -50,17 +50,10 @@ class Client:
 
     def print_winner(self):
         print("\n")
-        win = """
-        ⭐⭐⭐⭐⭐⭐⭐
-        ⭐  UD. GANÓ ⭐
-        ⭐⭐⭐⭐⭐⭐⭐
-                """
         
-        lose = """
-        ❌❌❌❌❌❌❌
-        ❌UD. PERDIO❌
-        ❌❌❌❌❌❌❌
-                """
+        win = "UD. HA GANADO"
+        
+        lose = "UD. HA PERDIDO"
 
         if(self.winner == self.player_id):
             print(win)
